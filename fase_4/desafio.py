@@ -4,7 +4,8 @@ import joblib
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import MinMaxScaler
-
+import os
+import __main__
 from imblearn.over_sampling import SMOTE
 
 # Idade
@@ -85,7 +86,7 @@ class Oversample(BaseEstimator,TransformerMixin):
         return df
 
 
-
+main_path = __main__.__file__
 
 #Predições 
 if st.button('Enviar'):
@@ -125,7 +126,8 @@ if st.button('Enviar'):
     #Criando novo cliente
     cliente_predict_df = pd.DataFrame([novo_cliente], columns=cols_novo_cliente)
 
-    pipeline = joblib.load('pipeline.joblib')
+    pipeline_path = main_path.replace('desafio.py', 'pipeline.joblib')
+    pipeline = joblib.load(pipeline_path)
 
     
     test_df = pd.read_csv('test.csv', sep=';')
