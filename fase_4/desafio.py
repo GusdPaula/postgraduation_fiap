@@ -129,15 +129,19 @@ if st.button('Enviar'):
     pipeline_path = main_path.replace('desafio.py', 'pipeline.joblib')
     pipeline = joblib.load(pipeline_path)
 
-    
-    test_df = pd.read_csv('test.csv', sep=';')
+    test_df_path = main_path.replace('desafio.py', 'test.csv')
+    test_df = pd.read_csv(test_df_path, sep=';')
     df_pipeline = pd.concat([test_df, cliente_predict_df])
 
     df_pipeline = pipeline.fit_transform(df_pipeline)
 
     del df_pipeline['DoencaVascular']
-    model = joblib.load('xgb.joblib')
+
+    model_path = main_path.replace('desafio.py', 'xgb.joblib')
+    model = joblib.load(model_path)
+
     final_pred = model.predict(df_pipeline)
+
     if final_pred[-1] == 0:
         st.success('### Baixa probabilidade de ter doença!')
         st.balloons()
