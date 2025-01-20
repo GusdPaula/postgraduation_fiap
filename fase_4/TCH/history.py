@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 import pandas as pd
 
 class HistoryPage():
-    def __init__(self, df):
+    def __init__(self, df: pd.DataFrame):
         
         fig_price = go.Figure(data=[go.Bar(x=df['Date'], y=df['Close'])])
         fig_price.update_layout(title='Brent Price Over Time in US')

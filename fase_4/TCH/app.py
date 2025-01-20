@@ -5,6 +5,8 @@ from home import HomePage
 from model import ModelPage
 from history import HistoryPage
 from forecast_class import Forecast
+from info import InfoPage
+from prediciton import PredPage
 
 st.set_page_config(
     page_title="Brent Price Analysis",
@@ -28,8 +30,10 @@ brent = create_model()
 
 st.write('# Brent Price Analysis')
 
-tab = st.sidebar.radio("Pages:", ["Home", "Model", "History", "Prediction"])
+tab = st.sidebar.radio("Pages:", ["Info", "Home", "Model", "History", "Prediction"])
 
+if tab == 'Info':
+    home_page = InfoPage()
 
 if tab == 'Home':
     home_page = HomePage(brent.df)
@@ -39,3 +43,6 @@ if tab == 'Model':
 
 if tab == 'History':
     HistoryPage(brent.df)
+
+if tab == 'Prediction':
+    PredPage(brent)

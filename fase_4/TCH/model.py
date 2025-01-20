@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 class ModelPage():
-    def __init__(self, metrics, train_df, test_df):
+    def __init__(self, metrics: pd.DataFrame, train_df: pd.DataFrame, test_df: pd.DataFrame):
         self.metrics = metrics
         self.train_df = train_df
         self.test_df = test_df
@@ -44,8 +44,14 @@ class ModelPage():
 
         train_df = train_df.loc[start:end]
 
+        train_df = train_df[['Date', 'Close']]
+        test_df = test_df[['Date', 'Predictions']]
+        test_df.rename(columns={'Predictions': 'Close'}, inplace=True)
+
+        train_df = pd.concat([train_df, test_df])
+
         fig_model = go.Figure(data=[go.Scatter(x=train_df.Date, y=train_df['Close'], line=dict(color='purple', width=3)),
-                                    go.Scatter(x=test_df.Date, y=test_df['Predictions'], line=dict(color='orange', width=3))])
+                                    go.Scatter(x=test_df.Date, y=test_df['Close'], line=dict(color='orange', width=3))])
         fig_model.update_layout(title='Brent Price Over Time in USD')
         custom_legend_name(fig_model, ['Train', 'Test'])
 

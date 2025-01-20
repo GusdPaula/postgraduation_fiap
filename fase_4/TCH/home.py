@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from sklearn.preprocessing import MinMaxScaler
 
 class HomePage():
-    def __init__(self, df):
+    def __init__(self, df: pd.DataFrame):
         
 
         def custom_legend_name(fig, new_names):

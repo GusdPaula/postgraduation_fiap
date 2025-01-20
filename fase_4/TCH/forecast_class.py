@@ -63,7 +63,7 @@ class Forecast():
 
     def predict_future_days(self):
         days = []
-        for i in range(6):
+        for i in range(7):
             day = (datetime.today() + timedelta(days=i)).strftime('%Y-%m-%d')
         
             days.append(day)
@@ -71,7 +71,7 @@ class Forecast():
         
         X_pred = self.create_features(df)
         X_pred = X_pred.set_index('Date')
-        preds = reg.predict(X_pred)
+        preds = self.xgb_model.predict(X_pred)
 
         self.df_real = pd.concat([self.xbg_train_df, self.xgb_test_df])
         X_pred['Close'] = preds
