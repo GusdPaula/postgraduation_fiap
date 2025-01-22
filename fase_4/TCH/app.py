@@ -8,91 +8,112 @@ from forecast_class import Forecast
 from info import InfoPage
 from prediciton import PredPage
 from production_consumption import ProdConsPage
+import time
 
-st.set_page_config(
-    page_title="Brent Price Analysis",
-    layout="wide"
-)
-warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
-warnings.simplefilter(action="ignore", category=FutureWarning)
-warnings.simplefilter(action="ignore", category=UserWarning)
-warnings.simplefilter(action="ignore")
+class RenderPages():
+    def __init__(self):
+        
+        self.tab_value = "Info"
 
-
-@st.cache_data()
-def create_model():
-    brent = Forecast('BZ=F')
-    brent.split_train_test()
-    brent.train_xgb()
-
-    return brent
-
-brent = create_model()
+        st.set_page_config(
+            page_title="TCH 4",
+            layout="wide"
+        )
+        warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
+        warnings.simplefilter(action="ignore", category=FutureWarning)
+        warnings.simplefilter(action="ignore", category=UserWarning)
+        warnings.simplefilter(action="ignore")
 
 
-if 'tab_value' not in st.session_state:
-    st.session_state.tab_value = "Home"
+        @st.cache_data()
+        def create_model():
+            brent = Forecast('BZ=F')
+            brent.split_train_test()
+            brent.train_xgb()
+
+            return brent
+
+        self.brent = create_model()
 
 
-sidebar_left = st.sidebar
+        self.sidebar_left = st.sidebar
 
-lang = sidebar_left.radio("Language:", ["EN", "PT"])
+        self.lang = self.sidebar_left.radio("Language:", ["EN", "PT"])
 
-if lang == "EN":
-    pages_names = ["Info", "Home", "Model", "History", 'Production & Consumption', "Prediction"]
-    info_page, home_page, model_page, history_page, prod_cons_page, prediction_page = pages_names
-
-    if st.session_state.tab_value not in pages_names:
-        dict_tabs = {"Informação": 'Info',
-                 "Home": "Home",
-                 "Modelo": "Model",
-                 "História": "History",
-                 "Predição": "Prediction",
-                 "Produção e Consumo": "Production & Consumption"}
-    
-        st.session_state.tab_value = dict_tabs[st.session_state.tab_value]
-
-    page_title = '# Brent Price Analysis'
-    side_page = 'Pages:'
-    radio_tabs = sidebar_left.radio(side_page, [info_page, home_page, model_page, history_page, prod_cons_page, prediction_page], index=pages_names.index(st.session_state.tab_value))
-
-else:
-    pages_names = ["Informação", "Home", "Modelo", "História", "Produção e Consumo", "Predição"]
-    info_page, home_page, model_page, history_page, prod_cons_page, prediction_page = pages_names
-
-    if st.session_state.tab_value not in pages_names:
-        dict_tabs = {'Info': "Informação",
-                 "Home": "Home",
-                 "Model": "Modelo",
-                 "History": "História",
-                 "Prediction": "Predição",
-                 "Production & Consumption": "Produção e Consumo"}
-    
-        st.session_state.tab_value = dict_tabs[st.session_state.tab_value]
-
-    page_title = '# Análise do Preço do Petróleo (BRENT)'
-    side_page = 'Páginas:'
-    radio_tabs = sidebar_left.radio(side_page, [info_page, home_page, model_page, history_page, prod_cons_page, prediction_page], index=pages_names.index(st.session_state.tab_value))
-
-st.session_state.tab_value = radio_tabs
-
-st.write(page_title)
-
-if st.session_state.tab_value == 'Info' or st.session_state.tab_value == 'Informação':
-    home_page = InfoPage(lang)
-
-if st.session_state.tab_value == 'Home':
-    home_page = HomePage(brent.df, lang)
-
-if st.session_state.tab_value == 'Model' or st.session_state.tab_value == 'Modelo':
-    ModelPage(brent.metrics_xgb, brent.xbg_train_df, brent.xgb_test_df, lang)
-
-if st.session_state.tab_value == 'History' or st.session_state.tab_value == 'História':
-    HistoryPage(brent.df, lang)
-
-if st.session_state.tab_value == 'Prediction' or st.session_state.tab_value == 'Predição':
-    PredPage(brent, lang)
+    def loading_page(self):
+        # Display a loading spinner with a message
+        text = 'Please wait... Loading the content' if self.lang == 'EN' else 'Espere... carregando conteúdo'
+        with st.spinner('Please wait... Loading the content'):
+            time.sleep(3)  # Simulate a long loading process
 
 
-if st.session_state.tab_value == 'Production & Consumption' or st.session_state.tab_value == 'Produção e Consumo':
-    ProdConsPage(brent.df, lang)
+    def get_page(self):
+
+        if self.lang == "EN":
+            self.pages_names = ["Info", "Home", "Model", "History", 'Production & Consumption', "Prediction"]
+            
+            if self.tab_value not in self.pages_names:
+                dict_tabs = {"Informação": 'Info',
+                        "Home": "Home",
+                        "Modelo": "Model",
+                        "História": "History",
+                        "Predição": "Prediction",
+                        "Produção e Consumo": "Production & Consumption"}
+            
+                self.tab_value = dict_tabs[self.tab_value]
+
+            self.page_title = '# Brent Price Analysis'
+            self.side_page = 'Pages:'
+            
+        else:
+            self.pages_names = ["Informação", "Home", "Modelo", "História", "Produção e Consumo", "Predição"]
+            
+            if self.tab_value not in self.pages_names:
+                dict_tabs = {'Info': "Informação",
+                        "Home": "Home",
+                        "Model": "Modelo",
+                        "History": "História",
+                        "Prediction": "Predição",
+                        "Production & Consumption": "Produção e Consumo"}
+            
+                self.tab_value = dict_tabs[self.tab_value]
+
+            self.page_title = '# Análise do Preço do Petróleo (BRENT)'
+            self.side_page = 'Páginas:'
+
+        
+    def select_page(self):
+        self.radio_tabs = self.sidebar_left.radio(self.side_page, self.pages_names, index=self.pages_names.index(self.tab_value))
+
+        self.tab_value = self.radio_tabs
+
+        self.loading_page()
+
+    def go_to_page(self):
+        st.write(self.page_title)
+
+        if self.tab_value == 'Info' or self.tab_value == 'Informação':
+            info_page = InfoPage(self.lang)
+
+        if self.tab_value == 'Home':
+            home_page = HomePage(self.brent.df, self.lang)
+
+        if self.tab_value == 'Model' or self.tab_value == 'Modelo':
+            ModelPage(self.brent.metrics_xgb, self.brent.xbg_train_df, self.brent.xgb_test_df, self.lang)
+
+        if self.tab_value == 'History' or self.tab_value == 'História':
+            HistoryPage(self.brent.df, self.lang)
+
+        if self.tab_value == 'Prediction' or self.tab_value == 'Predição':
+            PredPage(self.brent, self.lang)
+
+
+        if self.tab_value == 'Production & Consumption' or self.tab_value == 'Produção e Consumo':
+            ProdConsPage(self.brent.df, self.lang)
+
+
+if __name__ == '__main__':
+    render = RenderPages()
+    render.get_page()
+    render.select_page()
+    render.go_to_page()

@@ -60,10 +60,16 @@ class InfoPage():
             st.write(' - Erro Quadrático Médio (MSE): O MSE é uma função de custo que calcula a média dos quadrados dos erros, ou seja, a diferença quadrada média entre os valores estimados e os valores reais.')
             st.write(' - Erro Percentual Absoluto Médio (MAPE): O MAPE expressa o erro como uma porcentagem dos valores reais, fornecendo uma métrica fácil de entender.')
             st.write(' - Erro Absoluto Médio (MAE): O MAE mede a magnitude média dos erros em um conjunto de previsões, sem considerar sua direção. É a média da diferença absoluta entre os valores previstos e os valores reais. Ao contrário do MSE, ele não eleva os erros ao quadrado, o que significa que não pune os erros maiores com tanta severidade.')
-
+            
             st.write('##### Página de História')
             st.write('Na página de História, você poderá ver as principais crises ou rallys do preço do Brent. As crises serão destacadas no gráfico de preços em vermelho e os rallys em verde.')
             st.write('É importante mencionar que os preços geralmente sobe ou desce por conta de atividades políticas e acordos entre os países da OPEP.')
+
+            st.write('##### Página de Produção & Consumo')
+            st.write('Na página de Produção & Consumo, você pode encontrar a produção e o consumo ao longo dos anos para o Petróleo/Brent, além da desvio padrão com o preço.')
+            st.write('Os dados foram obtidos no link: https://www.kaggle.com/datasets/pralabhpoudel/world-energy-consumption')
+            st.write('A análise exploratória desses dados pode ser encontrada no link: https://github.com/GusdPaula/postgraduation_fiap/blob/37856517ad72bcf1612756a317111cd8ea117cb6/fase_4/TCH/energy_consumption.ipynb')
+
 
             st.write('##### Página de Predição')
             st.write('Na página de Predição, você verá a previsão de preço para os próximos 7 dias.')

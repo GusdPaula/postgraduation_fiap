@@ -32,13 +32,13 @@ class ProdConsPage():
             st.write('## Oil Production and Consumption')
 
             st.write('Looking at the charts it is possible to notice that production and consumption were side by side through the years.')
-            st.write('Also, we can notice that neither the comsumption or the production seems to affect directly the brent price.')
+            st.write('Also, we can notice that neither the comsumption or the production seems to affect directly the brent price. Except in extreme situations, like in 2019 and 2020 with Covid-19, where all the world production decreased and people were in quarantine.')
         
         else:
             st.write('## Produção e Consumo de Petróleo')
 
             st.write('Observando os gráficos, é possível perceber que a produção e o consumo estiveram lado a lado ao longo dos anos.')
-            st.write('Além disso, podemos perceber que nem o consumo nem a produção parecem afetar diretamente o preço do brent.')
+            st.write('Além disso, podemos perceber que nem o consumo nem a produção parecem afetar diretamente o preço do brent. Exceto em situações extremas, como em 2019 e 2020 com o Covid-19, onde toda a produção glocal caiu e as pessaos estavam em quarentena.')
 
 
         col_cons_prod, col_sd = st.columns(2)
@@ -100,6 +100,8 @@ class ProdConsPage():
                             'Oil Consumption' if lang == "EN" else 'Consumo de Óleo',
                             'Oil Consumption Per Capita' if lang == "EN" else 'Consumo de Óleo Per Capita',
                             'Brent Price' if lang == "EN" else 'Preço do Óleo'])
+        
+        fig_price_cons_prod.add_vrect(x0='2019', x1='2020', line_width=0, fillcolor="red", opacity=0.2)
 
         with col_sd:
             st.plotly_chart(fig_price_cons_prod)
