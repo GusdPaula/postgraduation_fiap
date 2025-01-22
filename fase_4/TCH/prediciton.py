@@ -5,7 +5,10 @@ import plotly.graph_objects as go
 import pandas as pd
 
 class PredPage():
-    def __init__(self, model: Forecast):
+    def __init__(self, model: Forecast, lang):
+
+        st.write('## Price Prediciton' if lang == "EN" else '## Predição do Preço')
+
         model.predict_future_days()
 
         preds = model.seven_days_pred
@@ -30,7 +33,7 @@ class PredPage():
 
        
         selected_date_range = st.slider(
-            "Select a date range",
+            "Select a date range" if lang == "EN" else 'Selecione um espaço de tempo',
             min_value=start_date,
             max_value=end_date,
             value=(end_date - + timedelta(weeks=20), end_date),
@@ -48,10 +51,10 @@ class PredPage():
 
         fig_model = go.Figure(data=[go.Scatter(x=real_data.Date, y=real_data['Close'], line=dict(color='purple', width=3)),
                                     go.Scatter(x=preds.index, y=preds['Close'], line=dict(color='orange', width=3))])
-        fig_model.update_layout(title='Brent Price Prediciton in USD')
-        custom_legend_name(fig_model, ['Real Price', 'Prediction'])
+        fig_model.update_layout(title='Brent Price Prediciton in USD' if lang == "EN" else 'Predição do preço do Petróleo em dólar')
+        custom_legend_name(fig_model, ['Real Price' if lang == "EN" else 'Preço Real', 'Prediction' if lang == "EN" else 'Predição'])
 
         preds.index = preds.index.strftime('%Y-%m-%d')
         preds = preds.T
-        st.dataframe(preds.filter(items=['Close'], axis=0))
+        st.dataframe(preds.filter(items=['Close'], axis=0), hide_index=True)
         st.plotly_chart(fig_model)

@@ -28,21 +28,63 @@ def create_model():
 
 brent = create_model()
 
-st.write('# Brent Price Analysis')
 
-tab = st.sidebar.radio("Pages:", ["Info", "Home", "Model", "History", "Prediction"])
+if 'tab_value' not in st.session_state:
+    st.session_state.tab_value = "Home"
 
-if tab == 'Info':
-    home_page = InfoPage()
 
-if tab == 'Home':
-    home_page = HomePage(brent.df)
+sidebar_left = st.sidebar
 
-if tab == 'Model':
-    ModelPage(brent.metrics_xgb, brent.xbg_train_df, brent.xgb_test_df)
+lang = sidebar_left.radio("Language:", ["EN", "PT"])
 
-if tab == 'History':
-    HistoryPage(brent.df)
+if lang == "EN":
+    info_page, home_page, model_page, history_page, prediction_page = ["Info", "Home", "Model", "History", "Prediction"]
 
-if tab == 'Prediction':
-    PredPage(brent)
+    if st.session_state.tab_value not in ["Info", "Home", "Model", "History", "Prediction"]:
+        dict_tabs = {"Informação": 'Info',
+                 "Home": "Home",
+                 "Modelo": "Model",
+                 "História": "History",
+                 "Predição": "Prediction"}
+    
+        st.session_state.tab_value = dict_tabs[st.session_state.tab_value]
+
+    page_title = '# Brent Price Analysis'
+    side_page = 'Pages:'
+    radio_tabs = sidebar_left.radio(side_page, [info_page, home_page, model_page, history_page, prediction_page], index=["Info", "Home", "Model", "History", "Prediction"].index(st.session_state.tab_value))
+
+else:
+    info_page, home_page, model_page, history_page, prediction_page = ["Informação", "Home", "Modelo", "História", "Predição"]
+
+    if st.session_state.tab_value not in ["Informação", "Home", "Modelo", "História", "Predição"]:
+        dict_tabs = {'Info': "Informação",
+                 "Home": "Home",
+                 "Model": "Modelo",
+                 "History": "História",
+                 "Prediction": "Predição"}
+    
+        st.session_state.tab_value = dict_tabs[st.session_state.tab_value]
+
+    page_title = '# Análise do Preço do Petróleo (BRENT)'
+    side_page = 'Páginas:'
+    radio_tabs = sidebar_left.radio(side_page, [info_page, home_page, model_page, history_page, prediction_page], index=["Informação", "Home", "Modelo", "História", "Predição"].index(st.session_state.tab_value))
+
+st.session_state.tab_value = radio_tabs
+
+st.write(page_title)
+
+if st.session_state.tab_value == 'Info' or st.session_state.tab_value == 'Informação':
+    home_page = InfoPage(lang)
+
+if st.session_state.tab_value == 'Home':
+    home_page = HomePage(brent.df, lang)
+
+if st.session_state.tab_value == 'Model' or st.session_state.tab_value == 'Modelo':
+    ModelPage(brent.metrics_xgb, brent.xbg_train_df, brent.xgb_test_df, lang)
+
+if st.session_state.tab_value == 'History' or st.session_state.tab_value == 'História':
+    HistoryPage(brent.df, lang)
+
+if st.session_state.tab_value == 'Prediction' or st.session_state.tab_value == 'Predição':
+    PredPage(brent, lang)
+

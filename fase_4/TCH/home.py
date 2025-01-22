@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from sklearn.preprocessing import MinMaxScaler
 
 class HomePage():
-    def __init__(self, df: pd.DataFrame):
+    def __init__(self, df: pd.DataFrame, lang):
         
 
         def custom_legend_name(fig, new_names):
@@ -25,7 +25,7 @@ class HomePage():
 
         start_date, end_date = get_date()
         selected_date_range = st.slider(
-            "Select a date range",
+            "Select a date range" if lang == "EN" else 'Selecione um espaço de tempo',
             min_value=start_date,
             max_value=end_date,
             value=(start_date, end_date),
@@ -36,19 +36,28 @@ class HomePage():
 
         period_col, col_ma_sd = st.columns(2)
 
-        with period_col:
-            option_per = st.selectbox("Period:", ['Daily', "Weekly", 'Monthly', 'Yearly'])
+        if lang == "EN":
+
+            with period_col:
+                option_per = st.selectbox("Period:", ['Daily', "Weekly", 'Monthly', 'Yearly'])
+            
+            with col_ma_sd:
+                option_ma_sd = st.selectbox("MA and SD::", ['None', 'MA20', "MA50", 'SD'])
         
-        with col_ma_sd:
-            option_ma_sd = st.selectbox("MA and SD::", ['None', 'MA20', "MA50", 'SD'])
+        else:
+            with period_col:
+                option_per = st.selectbox("Periodo:", ['Diário', "Semanal", 'Mensal', 'Anual'])
+            
+            with col_ma_sd:
+                option_ma_sd = st.selectbox("MA and SD::", ['Nada', 'MA20', "MA50", 'SD'])
 
         
         df = df.loc[start:end]
 
-        if option_per == 'Daily':
+        if option_per == 'Daily' or option_per == 'Diário':
             ...
 
-        if option_per == 'Yearly':
+        if option_per == 'Yearly' or option_per == 'Anual':
             df = df.groupby('year').agg({
                 'Open': 'first',    # First open price of the year
                 'Close': 'last',    # Last close price of the year
@@ -59,7 +68,7 @@ class HomePage():
 
             df['Date'] = df['year']
         
-        if option_per == 'Monthly':
+        if option_per == 'Monthly' or option_per == 'Mensal':
             df['per'] = df.Date.dt.to_period("M")
 
             df = df.groupby('per').agg({
@@ -72,7 +81,7 @@ class HomePage():
 
             df['Date'] = df.per.dt.strftime("%Y-%m")
 
-        if option_per == 'Weekly':
+        if option_per == 'Weekly' or option_per == 'Semanal':
             df['Date'] = pd.to_datetime(df['Date']) - pd.to_timedelta(7, unit='d')
             df = df.groupby([pd.Grouper(key='Date', freq='W-MON')]).agg({
                 'Open': 'first',    # First open price of the year
@@ -88,10 +97,10 @@ class HomePage():
                                             high=df['High'],
                                             low=df['Low'],
                                             close=df['Close'])])
-        fig_price.update_layout(title='Brent Price Over Time in USD')
+        fig_price.update_layout(title='Brent Price Over Time in USD' if lang == 'EN' else 'Preço do Petróleo no tempo em Dólar')
 
         fig_volume = go.Figure(data=[go.Bar(x=df['Date'], y=df['Volume'])])
-        fig_volume.update_layout(title='Brent Volume Over Time in US')
+        fig_volume.update_layout(title='Brent Volume Over Time in US' if lang == 'EN' else 'Volume de negociação do Petróleo no tempo em Dólar')
 
         fig_volume.update_layout(
             xaxis_title=None,
@@ -110,8 +119,8 @@ class HomePage():
                                         low=df['Low'],
                                         close=df['Close']),
                                         go.Scatter(x=df.Date, y=df[f'MA{num}'], line=dict(color='purple', width=3))])
-            fig_price.update_layout(title='Brent Price Over Time in USD')
-            custom_legend_name(fig_price, ['Price',f'MA{num}'])
+            fig_price.update_layout(title='Brent Price Over Time in USD' if lang == 'EN' else 'Preço do Petróleo no tempo em Dólar')
+            custom_legend_name(fig_price, ['Price' if lang == 'EN' else 'Preço',f'MA{num}'])
             fig_price.update_layout(legend=dict(yanchor="top", y=0.9, xanchor="right", x=0.9))
         
 
@@ -120,10 +129,10 @@ class HomePage():
             df['volume_sd'] = df.Volume.rolling(window=3).std()
                 
             fig_price = go.Figure(data=[go.Scatter(x=df.Date, y=df['rolling_sd_value'], line=dict(color='purple', width=3))])
-            fig_price.update_layout(title='Brent Price Deviation Over Time in USD')
+            fig_price.update_layout(title='Brent Price Deviation Over Time in USD' if lang == 'EN' else 'Desvio Padrão do preço do Petróleo no tempo em Dólar')
 
             fig_volume = go.Figure(data=[go.Scatter(x=df.Date, y=df['volume_sd'], line=dict(color='orange', width=3))])
-            fig_volume.update_layout(title='Brent Volume Deviation Over Time in US')
+            fig_volume.update_layout(title='Brent Volume Deviation Over Time in US' if lang == 'EN' else 'Desvio Padrão do volume de negociação do Petróleo no tempo em Dólar')
         
 
 
