@@ -44,7 +44,7 @@ class RenderPages():
         # Display a loading spinner with a message
         text = 'Please wait... Loading the content' if self.lang == 'EN' else 'Espere... carregando conteúdo'
         with st.spinner('Please wait... Loading the content'):
-            time.sleep(3)  # Simulate a long loading process
+            time.sleep(1)  # Simulate a long loading process
 
 
     def get_page(self):

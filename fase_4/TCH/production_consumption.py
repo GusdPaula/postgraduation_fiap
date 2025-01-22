@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
+import pycountry
 
 class ProdConsPage():
     def __init__(self, brent_df: pd.DataFrame, lang):
@@ -14,9 +15,8 @@ class ProdConsPage():
 
         df = pd.read_csv('https://raw.githubusercontent.com/GusdPaula/postgraduation_fiap/refs/heads/main/fase_4/TCH/World%20Energy%20Consumption.csv', sep=",", na_values="", header=None, names=columns, skiprows=1)
 
-        cols = [col for col in df.columns if 'oil_consumption' in col]
-        cols.append('country')
-        cols.append('year')
+        raw_df = df.copy()
+        
         df = df[['oil_consumption', 'oil_production', 'oil_energy_per_capita', 'country', 'year']]
         df = df[(pd.isna(df.oil_consumption) == False) | (pd.isna(df.oil_production) == False)| (pd.isna(df.oil_energy_per_capita) == False)]
         df = df[df.country == "World"]
