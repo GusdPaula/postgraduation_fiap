@@ -7,6 +7,7 @@ from history import HistoryPage
 from forecast_class import Forecast
 from info import InfoPage
 from prediciton import PredPage
+from production_consumption import ProdConsPage
 
 st.set_page_config(
     page_title="Brent Price Analysis",
@@ -38,36 +39,40 @@ sidebar_left = st.sidebar
 lang = sidebar_left.radio("Language:", ["EN", "PT"])
 
 if lang == "EN":
-    info_page, home_page, model_page, history_page, prediction_page = ["Info", "Home", "Model", "History", "Prediction"]
+    pages_names = ["Info", "Home", "Model", "History", 'Production & Consumption', "Prediction"]
+    info_page, home_page, model_page, history_page, prod_cons_page, prediction_page = pages_names
 
-    if st.session_state.tab_value not in ["Info", "Home", "Model", "History", "Prediction"]:
+    if st.session_state.tab_value not in pages_names:
         dict_tabs = {"Informação": 'Info',
                  "Home": "Home",
                  "Modelo": "Model",
                  "História": "History",
-                 "Predição": "Prediction"}
+                 "Predição": "Prediction",
+                 "Produção e Consumo": "Production & Consumption"}
     
         st.session_state.tab_value = dict_tabs[st.session_state.tab_value]
 
     page_title = '# Brent Price Analysis'
     side_page = 'Pages:'
-    radio_tabs = sidebar_left.radio(side_page, [info_page, home_page, model_page, history_page, prediction_page], index=["Info", "Home", "Model", "History", "Prediction"].index(st.session_state.tab_value))
+    radio_tabs = sidebar_left.radio(side_page, [info_page, home_page, model_page, history_page, prod_cons_page, prediction_page], index=pages_names.index(st.session_state.tab_value))
 
 else:
-    info_page, home_page, model_page, history_page, prediction_page = ["Informação", "Home", "Modelo", "História", "Predição"]
+    pages_names = ["Informação", "Home", "Modelo", "História", "Produção e Consumo", "Predição"]
+    info_page, home_page, model_page, history_page, prod_cons_page, prediction_page = pages_names
 
-    if st.session_state.tab_value not in ["Informação", "Home", "Modelo", "História", "Predição"]:
+    if st.session_state.tab_value not in pages_names:
         dict_tabs = {'Info': "Informação",
                  "Home": "Home",
                  "Model": "Modelo",
                  "History": "História",
-                 "Prediction": "Predição"}
+                 "Prediction": "Predição",
+                 "Production & Consumption": "Produção e Consumo"}
     
         st.session_state.tab_value = dict_tabs[st.session_state.tab_value]
 
     page_title = '# Análise do Preço do Petróleo (BRENT)'
     side_page = 'Páginas:'
-    radio_tabs = sidebar_left.radio(side_page, [info_page, home_page, model_page, history_page, prediction_page], index=["Informação", "Home", "Modelo", "História", "Predição"].index(st.session_state.tab_value))
+    radio_tabs = sidebar_left.radio(side_page, [info_page, home_page, model_page, history_page, prod_cons_page, prediction_page], index=pages_names.index(st.session_state.tab_value))
 
 st.session_state.tab_value = radio_tabs
 
@@ -88,3 +93,6 @@ if st.session_state.tab_value == 'History' or st.session_state.tab_value == 'His
 if st.session_state.tab_value == 'Prediction' or st.session_state.tab_value == 'Predição':
     PredPage(brent, lang)
 
+
+if st.session_state.tab_value == 'Production & Consumption' or st.session_state.tab_value == 'Produção e Consumo':
+    ProdConsPage(brent.df, lang)

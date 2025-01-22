@@ -28,7 +28,13 @@ class InfoPage():
 
             st.write('##### History Page')
             st.write('On the History page you will be able to see the Brent Price key crises or the rallies. The crises will be highlighted in the price chart as red and rallies as green.')
-            
+            st.write('It is important to mention that the price usually increase or decrease because of politics and agreements that the Countries inside OPEP do.')
+
+            st.write('##### Production & Consumption Page')
+            st.write('On the Production & Consumption page you can find the production and consumption through the years for Oil/Brent and also the standard deviation with the price.')
+            st.write('The data was pull from the link: https://www.kaggle.com/datasets/pralabhpoudel/world-energy-consumption')
+            st.write('The exploratory analysis on this data can be found on the link: https://github.com/GusdPaula/postgraduation_fiap/blob/37856517ad72bcf1612756a317111cd8ea117cb6/fase_4/TCH/energy_consumption.ipynb')
+
             st.write('##### Prediction Page')
             st.write('On the Prediction page you will see the price prediction for the next 7 days.')
         
@@ -57,6 +63,7 @@ class InfoPage():
 
             st.write('##### Página de História')
             st.write('Na página de História, você poderá ver as principais crises ou rallys do preço do Brent. As crises serão destacadas no gráfico de preços em vermelho e os rallys em verde.')
+            st.write('É importante mencionar que os preços geralmente sobe ou desce por conta de atividades políticas e acordos entre os países da OPEP.')
 
             st.write('##### Página de Predição')
             st.write('Na página de Predição, você verá a previsão de preço para os próximos 7 dias.')
