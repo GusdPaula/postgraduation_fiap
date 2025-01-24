@@ -35,6 +35,11 @@ class InfoPage():
             st.write('The data was pull from the link: https://www.kaggle.com/datasets/pralabhpoudel/world-energy-consumption')
             st.write('The exploratory analysis on this data can be found on the link: https://github.com/GusdPaula/postgraduation_fiap/blob/37856517ad72bcf1612756a317111cd8ea117cb6/fase_4/TCH/energy_consumption.ipynb')
 
+            st.write('##### Maps Page')
+            st.write('On the Maps page you can find the oil production and consumption per country through the years.')
+            st.write('The data was pull from the link: https://www.kaggle.com/datasets/pralabhpoudel/world-energy-consumption')
+            st.write('The exploratory analysis on this data can be found on the link: https://github.com/GusdPaula/postgraduation_fiap/blob/03939946a351c1632cab424a79ab9cf22b7c6d5f/fase_4/TCH/map_chart.ipynb')
+
             st.write('##### Prediction Page')
             st.write('On the Prediction page you will see the price prediction for the next 7 days.')
         
@@ -70,6 +75,10 @@ class InfoPage():
             st.write('Os dados foram obtidos no link: https://www.kaggle.com/datasets/pralabhpoudel/world-energy-consumption')
             st.write('A análise exploratória desses dados pode ser encontrada no link: https://github.com/GusdPaula/postgraduation_fiap/blob/37856517ad72bcf1612756a317111cd8ea117cb6/fase_4/TCH/energy_consumption.ipynb')
 
+            st.write('##### Página de Mapas')
+            st.write('Na página de Mapas, você pode encontrar a produção e o consumo de petróleo por país ao longo dos anos.')
+            st.write('Os dados foram obtidos no link: https://www.kaggle.com/datasets/pralabhpoudel/world-energy-consumption')
+            st.write('A análise exploratória desses dados pode ser encontrada no link: https://github.com/GusdPaula/postgraduation_fiap/blob/03939946a351c1632cab424a79ab9cf22b7c6d5f/fase_4/TCH/map_chart.ipynb')
 
             st.write('##### Página de Predição')
             st.write('Na página de Predição, você verá a previsão de preço para os próximos 7 dias.')

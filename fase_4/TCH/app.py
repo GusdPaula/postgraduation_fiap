@@ -9,6 +9,7 @@ from info import InfoPage
 from prediciton import PredPage
 from production_consumption import ProdConsPage
 import time
+from maps import MapsPage
 
 class RenderPages():
     def __init__(self):
@@ -50,7 +51,7 @@ class RenderPages():
     def get_page(self):
 
         if self.lang == "EN":
-            self.pages_names = ["Info", "Home", "Model", "History", 'Production & Consumption', "Prediction"]
+            self.pages_names = ["Info", "Home", "Model", "History", 'Production & Consumption', 'Maps', "Prediction"]
             
             if self.tab_value not in self.pages_names:
                 dict_tabs = {"Informação": 'Info',
@@ -58,7 +59,8 @@ class RenderPages():
                         "Modelo": "Model",
                         "História": "History",
                         "Predição": "Prediction",
-                        "Produção e Consumo": "Production & Consumption"}
+                        "Produção e Consumo": "Production & Consumption",
+                        "Mapas": " Maps"}
             
                 self.tab_value = dict_tabs[self.tab_value]
 
@@ -66,7 +68,7 @@ class RenderPages():
             self.side_page = 'Pages:'
             
         else:
-            self.pages_names = ["Informação", "Home", "Modelo", "História", "Produção e Consumo", "Predição"]
+            self.pages_names = ["Informação", "Home", "Modelo", "História", "Produção e Consumo", "Mapas", "Predição"]
             
             if self.tab_value not in self.pages_names:
                 dict_tabs = {'Info': "Informação",
@@ -74,7 +76,8 @@ class RenderPages():
                         "Model": "Modelo",
                         "History": "História",
                         "Prediction": "Predição",
-                        "Production & Consumption": "Produção e Consumo"}
+                        "Production & Consumption": "Produção e Consumo",
+                        "Maps": "Mapdas"}
             
                 self.tab_value = dict_tabs[self.tab_value]
 
@@ -110,6 +113,9 @@ class RenderPages():
 
         if self.tab_value == 'Production & Consumption' or self.tab_value == 'Produção e Consumo':
             ProdConsPage(self.brent.df, self.lang)
+        
+        if self.tab_value == 'Maps' or self.tab_value == 'Mapas':
+            MapsPage(self.lang)
 
 
 if __name__ == '__main__':
