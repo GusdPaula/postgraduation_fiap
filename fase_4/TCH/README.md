@@ -128,20 +128,21 @@ postgraduation_fiap/
 │
 ├── fase_4/
 │   ├── TCH/
-│   │   ├── app.py                  # Main Streamlit app file
-│   │   ├── brent.ipynb             # Brent price data analysis (Jupyter Notebook)
-│   │   ├── energy_consumption.ipynb # Energy consumption data analysis (Jupyter Notebook)
-│   │   ├── forecast_class.py       # Model class for XGBoost forecasting
-│   │   ├── history.py              # History page code
-│   │   ├── home.py                 # Home page code
-│   │   ├── info.py                 # Information page code
-│   │   ├── map_chart.ipynb         # Map chart analysis (Jupyter Notebook)
-│   │   ├── maps.py                 # Maps page code
-│   │   ├── model.py                # Machine learning model code
+│   │   ├── app.py                        # Main Streamlit app file
+│   │   ├── brent.ipynb                   # Brent price data analysis (Jupyter Notebook)
+│   │   ├── energy_consumption.ipynb      # Energy consumption data analysis (Jupyter Notebook)
+│   │   ├── forecast_class.py             # Model class for XGBoost forecasting
+│   │   ├── history.py                    # History page code
+│   │   ├── home.py                       # Home page code
+│   │   ├── info.py                       # Information page code
+│   │   ├── map_chart.ipynb               # Map chart analysis (Jupyter Notebook)
+│   │   ├── maps.py                       # Maps page code
+│   │   ├── model.py                      # Machine learning model code
 │   │   ├── oil_production_statistics.csv # Oil production data
-│   │   ├── prediciton.py           # Prediction logic
-│   │   ├── production_consumption.py # Production and consumption data processing
-│   │   └── requirements.txt        # Project dependencies
+│   │   ├── prediction.py                 # Prediction logic
+│   │   ├── production_consumption.py     # Production and consumption data processing
+│   │   ├── requirements.txt              # Project dependencies
+│   │   └── World Energy Consumption.csv  # Energy consumption data (CSV file)
 ```
 
 ## Contributing
