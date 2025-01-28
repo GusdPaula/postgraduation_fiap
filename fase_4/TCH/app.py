@@ -12,20 +12,29 @@ import time
 from maps import MapsPage
 
 class RenderPages():
+    '''
+    
+        App Page that brings all the other pages and run the model
+    
+    '''
     def __init__(self):
         
+        # Setting initial tab
         self.tab_value = "Info"
 
+        # Setting page configs
         st.set_page_config(
             page_title="TCH 4",
             layout="wide"
         )
+
+        # Ignoring warings
         warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
         warnings.simplefilter(action="ignore", category=FutureWarning)
         warnings.simplefilter(action="ignore", category=UserWarning)
         warnings.simplefilter(action="ignore")
 
-
+        # Running the model
         @st.cache_data()
         def create_model():
             brent = Forecast('BZ=F')
@@ -36,20 +45,23 @@ class RenderPages():
 
         self.brent = create_model()
 
-
+        # Adding widgets
         self.sidebar_left = st.sidebar
-
         self.lang = self.sidebar_left.radio("Language:", ["EN", "PT"])
 
     def loading_page(self):
         # Display a loading spinner with a message
         text = 'Please wait... Loading the content' if self.lang == 'EN' else 'Espere... carregando conteúdo'
-        with st.spinner('Please wait... Loading the content'):
-            time.sleep(1)  # Simulate a long loading process
-
+        with st.spinner(text):
+            time.sleep(1)  
 
     def get_page(self):
+        '''
+            This will get the page when user click on the language radio button
+        
+        '''
 
+        # Pages in language is english
         if self.lang == "EN":
             self.pages_names = ["Info", "Home", "Model", "History", 'Production & Consumption', 'Maps', "Prediction"]
             
@@ -66,7 +78,8 @@ class RenderPages():
 
             self.page_title = '# Brent Price Analysis'
             self.side_page = 'Pages:'
-            
+        
+        # Page if language is PT
         else:
             self.pages_names = ["Informação", "Home", "Modelo", "História", "Produção e Consumo", "Mapas", "Predição"]
             
@@ -86,6 +99,12 @@ class RenderPages():
 
         
     def select_page(self):
+        '''
+            This will select the page when user click on the page radio button
+
+
+        '''
+
         self.radio_tabs = self.sidebar_left.radio(self.side_page, self.pages_names, index=self.pages_names.index(self.tab_value))
 
         self.tab_value = self.radio_tabs
@@ -93,6 +112,10 @@ class RenderPages():
         self.loading_page()
 
     def go_to_page(self):
+        '''
+            This will load the selected page
+        
+        '''
         st.write(self.page_title)
 
         if self.tab_value == 'Info' or self.tab_value == 'Informação':

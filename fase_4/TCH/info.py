@@ -1,6 +1,10 @@
 import streamlit as st
 
 class InfoPage():
+    '''
+        Info page that will show the text main informations about the app and analysis
+    
+    '''
     def __init__(self, lang):
 
         if lang == "EN":

@@ -6,15 +6,27 @@ from datetime import datetime, timedelta
 from sklearn.preprocessing import MinMaxScaler
 
 class HomePage():
+    '''
+        Home page that will show the proce chart and volume
+    
+    '''
     def __init__(self, df: pd.DataFrame, lang):
         
 
         def custom_legend_name(fig, new_names):
+            '''
+                Function that will adjust legend in the plots
+
+            '''
             for i, new_name in enumerate(new_names):
                 fig.data[i].name = new_name
 
         @st.cache_data()        
         def get_date():
+            '''
+                Function to get the initial and end date on the DF
+            
+            '''
             start_date = pd.to_datetime(df.Date).min().timestamp()
             end_date = pd.to_datetime(df.Date).max().timestamp()
 
@@ -23,6 +35,7 @@ class HomePage():
 
             return start_date, end_date
 
+        # Setting the date slider
         start_date, end_date = get_date()
         selected_date_range = st.slider(
             "Select a date range" if lang == "EN" else 'Selecione um espaço de tempo',
@@ -34,8 +47,10 @@ class HomePage():
         start = datetime.date(selected_date_range[0])
         end = datetime.date(selected_date_range[1])
 
+        # Creating chart grid
         period_col, col_ma_sd = st.columns(2)
 
+        # Adjusting text based on the language
         if lang == "EN":
 
             with period_col:
@@ -51,9 +66,10 @@ class HomePage():
             with col_ma_sd:
                 option_ma_sd = st.selectbox("MA and SD::", ['Nada', 'MA20', "MA50", 'SD'])
 
-        
+        # Filtering Df based on the slider's dates    
         df = df.loc[start:end]
 
+        # Adjusting plot period
         if option_per == 'Daily' or option_per == 'Diário':
             ...
 
@@ -92,6 +108,7 @@ class HomePage():
             }).reset_index()
 
 
+        # Creating price chart
         fig_price = go.Figure(data=[go.Candlestick(x=df['Date'],
                                             open=df['Open'],
                                             high=df['High'],
@@ -99,6 +116,7 @@ class HomePage():
                                             close=df['Close'])])
         fig_price.update_layout(title='Brent Price Over Time in USD' if lang == 'EN' else 'Preço do Petróleo no tempo em Dólar')
 
+        # Creating volume chart
         fig_volume = go.Figure(data=[go.Bar(x=df['Date'], y=df['Volume'])])
         fig_volume.update_layout(title='Brent Volume Over Time in US' if lang == 'EN' else 'Volume de negociação do Petróleo no tempo em Dólar')
 
@@ -108,6 +126,7 @@ class HomePage():
             xaxis_rangeslider_visible=True
         )
 
+        # Adding MA in the price chart
         if "MA" in option_ma_sd:
 
             num = int(option_ma_sd[2:])
@@ -124,6 +143,7 @@ class HomePage():
             fig_price.update_layout(legend=dict(yanchor="top", y=0.9, xanchor="right", x=0.9))
         
 
+        # Adjusting volume and price chart as standard deviation
         if option_ma_sd == "SD":
             df['rolling_sd_value'] = df.Close.rolling(window=3).std()
             df['volume_sd'] = df.Volume.rolling(window=3).std()
@@ -135,7 +155,7 @@ class HomePage():
             fig_volume.update_layout(title='Brent Volume Deviation Over Time in US' if lang == 'EN' else 'Desvio Padrão do volume de negociação do Petróleo no tempo em Dólar')
         
 
-
+        # Showing the charts
         col_price, col_volume = st.columns(2)
         
         with col_price:

@@ -11,10 +11,19 @@ import datetime
 from datetime import datetime, timedelta
 
 class Forecast():
+    '''
+        Class that runs a time series model with yahoo finance.
+    
+    '''
     def __init__(self, ticker):
+
+        # Setting the symbol
         data = yf.Ticker("BZ=F")
+
+        # Saving data in a DF
         df = pd.DataFrame(data.history(period="max"))
         
+        # Converting date to date format
         df['Date'] = pd.to_datetime(df.index, format='%Y-%m-%d').date
         df.index = df['Date']
 
@@ -23,6 +32,11 @@ class Forecast():
         self.df = df
 
     def create_features(self, df):
+        '''
+        
+            Function that will split the Date in more column to help model and plotting the analysis
+        
+        '''
         df["Date"] = pd.to_datetime(df["Date"])
         df["year"] = df["Date"].dt.year
         df["month"] = df["Date"].dt.month
@@ -31,6 +45,10 @@ class Forecast():
         return df
 
     def split_train_test(self):
+        '''
+            Split the DF for the model.
+        
+        '''
         train_size = self.df.shape[0] - 7
         train, test = self.df[:train_size], self.df[train_size:]
         
@@ -41,12 +59,21 @@ class Forecast():
         self.TARGET = "Close"
 
     def calculate_metrics(self, y_true, y_pred):
+        '''
+            Calculate the metrics to evaluate the model
+        
+        '''
         mae = mean_absolute_error(y_true, y_pred)
         mse = mean_squared_error(y_true, y_pred)
         mape = mean_absolute_percentage_error(y_true, y_pred) * 100
         return mae, mse, mape
 
     def train_xgb(self):
+        '''
+
+            Training the model
+        
+        '''
         X_train, y_train = self.train[self.FEATURES], self.train[self.TARGET]
         X_test, y_test = self.test[self.FEATURES], self.test[self.TARGET]
         
@@ -62,6 +89,10 @@ class Forecast():
         self.xgb_test_df['Predictions'] = reg.predict(X_test)
 
     def predict_future_days(self):
+        '''
+            Predict the price for 7 future days
+        
+        '''
         days = []
         for i in range(7):
             day = (datetime.today() + timedelta(days=i)).strftime('%Y-%m-%d')

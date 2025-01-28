@@ -4,8 +4,14 @@ import plotly.express as px
 import pycountry
 
 class MapsPage():
-    def __init__(self, lang):
+    '''
+        Maps page that will show oil production and consumption based on the country
+    
+    '''
 
+    def __init__(self, lang):
+        
+        # Adjusting text based on the language
         if lang == "EN":
             st.write('## Production and consumption through the years in the map')
             st.write('We can notice that the countries that most product oil are not the ones that most consume, except the US.')
@@ -16,29 +22,24 @@ class MapsPage():
             st.write('Podemos perceber que os países que mais produzem petróleo não são os que mais consomem, exceto os EUA.')
             st.write('Isso força o controle do preço nas mãos e nas políticas dos países produtores.')
 
-
+        # Reading the data
         df = pd.read_csv('https://raw.githubusercontent.com/GusdPaula/postgraduation_fiap/refs/heads/main/fase_4/TCH/World%20Energy%20Consumption.csv', sep=",", na_values="", nrows=10)
 
+        # adding two column due to format issues and adjusting df
         df['extra 1'] = ''
         df['extra 2'] = ''
-
         columns = df.columns
-
         df = pd.read_csv('https://raw.githubusercontent.com/GusdPaula/postgraduation_fiap/refs/heads/main/fase_4/TCH/World%20Energy%20Consumption.csv', sep=",", na_values="", header=None, names=columns, skiprows=1)
-
-        raw_df = df.copy()
-        
         df = df[['oil_consumption', 'oil_production', 'country', 'year']]
         df = df[(pd.isna(df.oil_consumption) == False) | (pd.isna(df.oil_production) == False)]
-        #df = df[(pd.isna(df.oil_consumption) > 0) | (pd.isna(df.oil_production) > 0)]
         df.index = pd.to_datetime(df.year, format='%Y')
 
         @st.cache_data()
         def get_date():
             # Convert 'Date' to datetime and extract the min and max years
-            df['year'] = pd.to_datetime(df['year'], errors='coerce')  # Ensure it's datetime format
-            min_year = df['year'].dt.year.min()  # Extract year and get the min
-            max_year = df['year'].dt.year.max()  # Extract year and get the max
+            df['year'] = pd.to_datetime(df['year'], errors='coerce')  
+            min_year = df['year'].dt.year.min()  
+            max_year = df['year'].dt.year.max()  
 
             return min_year, max_year
 
@@ -54,14 +55,13 @@ class MapsPage():
             step=1,  # Step size of 1 year
         )
 
+        # Filtering DF based on the Date Slider
         df.year = df.year.astype(int)
         df = df[(df.year >= selected_year_range[0]) & (df.year <= selected_year_range[1])]
         df.reset_index(inplace=True, drop=True)
         df.fillna(0, inplace=True)
         
         df.sort_values('year', inplace=True)
-
-
 
         # Function to get ISO alpha-3 code for a given country name
         def get_iso_alpha_3(country_name):
@@ -75,10 +75,14 @@ class MapsPage():
         df = df.groupby(['country', 'ISO_Alpha_3'])[['oil_consumption', 'oil_production']].sum()
         df = df.reset_index()
         
+        # Creating chart grid
         prod_col, cons_col = st.columns(2)
 
         with prod_col:
+            # Adjusting columns name to better visualization
             df_prod = df.rename(columns={"oil_production": 'Scale (in terawatt-hours)' if lang == 'EN' else 'Escala (em terawatt-hora)'})
+
+            # Creating production chart
             fig_map_oil_prod = px.scatter_geo(df_prod, locations="ISO_Alpha_3", color="Scale (in terawatt-hours)" if lang == 'EN' else 'Escala (em terawatt-hora)',
                         hover_name="country", size="Scale (in terawatt-hours)" if lang == 'EN' else 'Escala (em terawatt-hora)', color_continuous_scale="Viridis", title='Oil Production' if lang == 'EN' else 'Produção de Óleo')
             
@@ -98,10 +102,15 @@ class MapsPage():
 
             # Update traces to make the lines white (for borders around the countries)
             fig_map_oil_prod.update_traces(marker=dict(line=dict(width=1, color='white')))
+
+            # Showing the chart
             st.plotly_chart(fig_map_oil_prod)
 
         with cons_col:
+            # Adjusting columns name to better visualization
             df_cons = df.rename(columns={"oil_consumption": 'Scale (in terawatt-hours)' if lang == 'EN' else 'Escala (em terawatt-hora)'})
+
+            # Creating consumption chart
             fig_map_oil_cons = px.scatter_geo(df_cons, locations="ISO_Alpha_3", color="Scale (in terawatt-hours)" if lang == 'EN' else 'Escala (em terawatt-hora)',
                         hover_name="country", size="Scale (in terawatt-hours)" if lang == 'EN' else 'Escala (em terawatt-hora)', color_continuous_scale="Jet", title='Oil Consumption' if lang == 'EN' else 'Consumo de Óleo')
             
@@ -123,6 +132,7 @@ class MapsPage():
             # Update traces to make the lines white (for borders around the countries)
             fig_map_oil_cons.update_traces(marker=dict(line=dict(width=1, color='white')))
             
+            # Showing the chart
             st.plotly_chart(fig_map_oil_cons)
 
 

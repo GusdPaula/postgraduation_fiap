@@ -3,8 +3,13 @@ import plotly.graph_objects as go
 import pandas as pd
 
 class HistoryPage():
+    '''
+        Page to show the main events behind brent price
+    
+    '''
     def __init__(self, df: pd.DataFrame, lang):
         
+        # creating price plot
         fig_price = go.Figure(data=[go.Bar(x=df['Date'], y=df['Close'])])
         fig_price.update_layout(title='Brent Price Over Time in USD' if lang == 'EN' else 'Preço do Petróleo no tempo em Dólar')
 
@@ -14,8 +19,11 @@ class HistoryPage():
             xaxis_rangeslider_visible=True
         )
 
+        # Adding buttons grid
         col_button_cri_2008, col_button_cri_2014, col_button_cri_2020, col_button_high_2022 = st.columns(4)
 
+        # Buttons and their respective events
+        # Events will have their individual text and the one square added in the price plot
         text = 'Click on the buttons to see what happened with Brent Price... ' if lang == 'EN' else 'Clique nos botões para ver o que houve com o preço...'
         with col_button_cri_2008:
             if st.button('2008 Crisis' if lang == 'EN' else 'Crise de 2008'):
@@ -53,5 +61,6 @@ class HistoryPage():
                 else:
                     text = "Em 2022, os preços do petróleo dispararam devido à guerra entre a Rússia e a Ucrânia, que interrompeu os fornecimentos globais de petróleo e levou a sanções contra as exportações de petróleo russo. Os cortes contínuos de produção da OPEC+ e a recuperação da demanda pós-pandemia também tensionaram a oferta, elevando os preços. A inflação e a especulação do mercado contribuíram ainda mais para o aumento. A meio do ano, os preços do Brent Crude chegaram a cerca de $120 por barril. A combinação das tensões geopolíticas e os desequilíbrios entre oferta e demanda impulsionaram o aumento do preço."
 
+        # Showing the text and plot
         st.write(text)
         st.plotly_chart(fig_price)

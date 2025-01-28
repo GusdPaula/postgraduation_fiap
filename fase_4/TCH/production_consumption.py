@@ -5,18 +5,20 @@ import plotly.express as px
 import pycountry
 
 class ProdConsPage():
+    '''
+        Page that will show Oil produciton and consumption over the years
+
+    '''
     def __init__(self, brent_df: pd.DataFrame, lang):
+
+        # Reading the data
         df = pd.read_csv('https://raw.githubusercontent.com/GusdPaula/postgraduation_fiap/refs/heads/main/fase_4/TCH/World%20Energy%20Consumption.csv', sep=",", na_values="", nrows=10)
 
+        # adjusting DF
         df['extra 1'] = ''
         df['extra 2'] = ''
-
         columns = df.columns
-
         df = pd.read_csv('https://raw.githubusercontent.com/GusdPaula/postgraduation_fiap/refs/heads/main/fase_4/TCH/World%20Energy%20Consumption.csv', sep=",", na_values="", header=None, names=columns, skiprows=1)
-
-        raw_df = df.copy()
-        
         df = df[['oil_consumption', 'oil_production', 'oil_energy_per_capita', 'country', 'year']]
         df = df[(pd.isna(df.oil_consumption) == False) | (pd.isna(df.oil_production) == False)| (pd.isna(df.oil_energy_per_capita) == False)]
         df = df[df.country == "World"]
@@ -25,9 +27,14 @@ class ProdConsPage():
         del df['year']
 
         def custom_legend_name(fig, new_names):
+            '''
+                Function that will help adjustin chart legend
+            
+            '''
             for i, new_name in enumerate(new_names):
                 fig.data[i].name = new_name
 
+        # Adjusting text based on the language
         if lang == 'EN':
             st.write('## Oil Production and Consumption')
 
@@ -40,12 +47,13 @@ class ProdConsPage():
             st.write('Observando os gráficos, é possível perceber que a produção e o consumo estiveram lado a lado ao longo dos anos.')
             st.write('Além disso, podemos perceber que nem o consumo nem a produção parecem afetar diretamente o preço do brent. Exceto em situações extremas, como em 2019 e 2020 com o Covid-19, onde toda a produção glocal caiu e as pessaos estavam em quarentena.')
 
-
+        # Creating charts grid
         col_cons_prod, col_sd = st.columns(2)
 
+        # Creating the consumption and production chart
         cons_prod_fig = go.Figure(data=[go.Bar(x=df.index, y=df['oil_production']),
                                   go.Line(x=df.index, y=df['oil_consumption'], line=dict(color='orange', width=3))])
-        
+    
         cons_prod_fig.update_layout(title='Oil Production and Consumption in terawatt-hours through the years' if lang == "EN" else 'Produção e Consumo de Óleo em terawatt-hours ao passar dos anos',
                                     legend=dict(
                                             orientation='h',  # Set the legend to be horizontal
@@ -57,8 +65,11 @@ class ProdConsPage():
         custom_legend_name(cons_prod_fig, ['Oil Production' if lang == "EN" else 'Produção de Óleo', 'Oil Consumption' if lang == "EN" else 'Consumo de Óleo'])
 
         with col_cons_prod:
+            # Showing the chart
             st.plotly_chart(cons_prod_fig)
 
+        # Adjusting data from standars deviation
+        # group by based on the year
         brent_df = brent_df.groupby('year').agg({
                 'Open': 'first',    # First open price of the year
                 'Close': 'last',    # Last close price of the year
@@ -67,20 +78,30 @@ class ProdConsPage():
                 'Volume': 'sum'     # Total volume traded in the year
             }).reset_index()
 
+        # Adjusting date format
         brent_df['Date'] = pd.to_datetime(brent_df['year'], format='%Y')
-
         brent_df.index = brent_df.Date
+
+        # Getting relevat columns
         brent_df = brent_df.Close
+
+        # MErging price with consumption and production
         df = pd.merge(df, brent_df, how='left',left_index=True, right_index=True)
+
+        # normalizing DF
         normalized_df=(df-df.mean())/df.std()
         normalized_df.rename(columns={'Close': 'Price'}, inplace=True)
+
+        # Filtering DF
         filtered_df = normalized_df.query('year >= 2007')
 
+        # Adjusting labels
         labels={'oil_consumption': "Oil Consumption",
                 'oil_production': "oil Prodcution",
                 'oil_energy_per_capita': 'Oil Consumption Per Capita',
                 'Price': 'Price'}
         
+        # Creatind Standard Deviation chart
         fig_price_cons_prod = go.Figure(data=[go.Line(x=filtered_df.index, y=filtered_df['oil_production'], line=dict(color='blue', width=3)),
                                   go.Line(x=filtered_df.index, y=filtered_df['oil_consumption'], line=dict(color='lightblue', width=3)),
                                   go.Line(x=filtered_df.index, y=filtered_df['oil_energy_per_capita'], line=dict(color='orange', width=3)),
@@ -101,7 +122,9 @@ class ProdConsPage():
                             'Oil Consumption Per Capita' if lang == "EN" else 'Consumo de Óleo Per Capita',
                             'Brent Price' if lang == "EN" else 'Preço do Óleo'])
         
+        # ading rectangle when the correlation happened
         fig_price_cons_prod.add_vrect(x0='2019', x1='2020', line_width=0, fillcolor="red", opacity=0.2)
 
         with col_sd:
+            # Showing the chart
             st.plotly_chart(fig_price_cons_prod)
